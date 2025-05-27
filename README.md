@@ -1,20 +1,18 @@
-# Calculator Web App
+# Calculator CLI
 
-This repository contains a simple Flask-based calculator. Start the server with:
-
-```bash
-python calculator.py
-```
-
-Make sure Flask is installed:
+This repository contains a simple command-line calculator. Run it with:
 
 ```bash
-pip install Flask
+python calculator.py OPERATION A B
 ```
 
-Available endpoints:
+Where `OPERATION` is one of `add`, `sub`, `mul` or `div`. `A` and `B` are
+the two numbers to operate on.
 
-- `/add?a=<num>&b=<num>`
-- `/sub?a=<num>&b=<num>`
-- `/mul?a=<num>&b=<num>`
-- `/div?a=<num>&b=<num>`
+Example:
+
+```bash
+python calculator.py add 1 2
+```
+
+will print `3.0`.
