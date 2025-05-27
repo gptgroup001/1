@@ -1,6 +1,8 @@
-"""Simple command-line calculator."""
+"""Simple calculator implemented as a Flask web app."""
 
-import argparse
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
 
 
 def add(a, b):
@@ -25,24 +27,59 @@ def divide(a, b):
     return a / b
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Simple calculator")
-    parser.add_argument("operation", choices=["add", "sub", "mul", "div"],
-                        help="Operation to perform")
-    parser.add_argument("a", type=float, help="First operand")
-    parser.add_argument("b", type=float, help="Second operand")
-    args = parser.parse_args()
 
-    ops = {
-        "add": add,
-        "sub": subtract,
-        "mul": multiply,
-        "div": divide,
-    }
+def _parse_args():
+    """Parse `a` and `b` from request arguments."""
+    a = request.args.get("a", type=float)
+    b = request.args.get("b", type=float)
+    if a is None or b is None:
+        raise ValueError("Parameters 'a' and 'b' must be numbers")
+    return a, b
 
-    result = ops[args.operation](args.a, args.b)
-    print(result)
+
+@app.route("/add")
+def add_route():
+    """Handle addition."""
+    try:
+        a, b = _parse_args()
+        result = add(a, b)
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 400
+    return jsonify({"result": result})
+
+
+@app.route("/sub")
+def sub_route():
+    """Handle subtraction."""
+    try:
+        a, b = _parse_args()
+        result = subtract(a, b)
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 400
+    return jsonify({"result": result})
+
+
+@app.route("/mul")
+def mul_route():
+    """Handle multiplication."""
+    try:
+        a, b = _parse_args()
+        result = multiply(a, b)
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 400
+    return jsonify({"result": result})
+
+
+@app.route("/div")
+def div_route():
+    """Handle division."""
+    try:
+        a, b = _parse_args()
+        result = divide(a, b)
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 400
+    return jsonify({"result": result})
 
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
